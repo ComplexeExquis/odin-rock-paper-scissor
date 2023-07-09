@@ -9,6 +9,13 @@ html {
 }
 
 
+h1,
+h2,
+h3,
+p {
+    margin: 0;
+}
+
 body {
     margin: 0;
     background-color: #21351B;
@@ -17,11 +24,18 @@ body {
     padding: 3.5rem 10%;
 }
 
-.start-page {
+/* start page */
+
+.container {
     padding-top: 3.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+
+.container.start-page {
+    display: none;
 }
 
 #title {
@@ -53,3 +67,70 @@ body {
 .btn.player-vs-ai-btn {
     margin-top: 2.25rem;
 }
+/* start page end */
+
+/* game page */
+.container.game-page {
+    padding-top: 0;
+    padding-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
+/* .container.game-page {
+    display: none;
+} */
+
+#score-title {
+    text-align: center;
+    font-size: 2.25rem;
+}
+
+#score-container {
+    width: 100%;
+}
+
+#individual-score-container {
+    margin-top: 1rem;
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    font-size: 1.5rem;
+}
+
+.player-score {
+    margin-top: 0.25rem;
+}
+
+#player-pick {
+    font-size: 2.25rem;
+}
+
+#choices-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn.rock,
+.btn.paper,
+.btn.scissor {
+    font-size: 1.5rem;
+    min-width: 6.25rem;
+    padding: 2rem 0;
+}
+
+/* game page end */
+
+
+
+/* 
+media queries
+- start-page title needs to be bigger on tablet and dekstop
+- game-page-choices-btn needs to be bigger and more gap
+- game-page layout on tablet and dekstop sucks, fix that, 
+  hint: less gap between things.
+
+
+*/
