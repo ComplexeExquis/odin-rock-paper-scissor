@@ -1,0 +1,15 @@
+body {
+    margin: 0;
+}
+
+#container {
+    min-height: 100vh;
+    background-color: bisque;
+    padding: 2rem;
+}
+
+#title {
+    margin: 0;
+    text-align: center;
+    font-size: 6.4rem;
+}
