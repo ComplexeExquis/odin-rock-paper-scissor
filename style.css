@@ -34,9 +34,9 @@ body {
 }
 
 
-.container.start-page {
+/* .container.start-page {
     display: none;
-}
+} */
 
 #title {
     margin: 0;
@@ -79,9 +79,9 @@ body {
     min-height: 100vh;
 }
 
-/* .container.game-page {
+.container.game-page {
     display: none;
-} */
+}
 
 #score-title {
     text-align: center;
@@ -100,13 +100,18 @@ body {
     font-size: 1.5rem;
 }
 
+.player-title {
+    min-width: 6ch;
+}
+
 .player-score {
     margin-top: 0.25rem;
 }
 
-#player-pick {
+#player-pick-container {
     font-size: 2.25rem;
-}
+}   
+
 
 #choices-container {
     display: flex;

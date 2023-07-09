@@ -96,4 +96,74 @@ function game() {
     
 }
 
+/*
+
+- player-pick-container result, add image, p, image, also js
+- pop up result and pop up end result outsite 
+  player-pick-container, put in middle, do it all in javascript
+
+
+
+*/
+
+/*
+All possible states: 
+[1] startPage
+[2] gamePage
+*/ 
+let screenState = "startPage";
+
+/*
+All possible gamemodes:
+[1] pvp (player vs player)
+[2] pvai (player vs ai)
+*/
+let gameModes = "";
+
+
+const pVsPBtn = document.querySelector(".player-vs-player-btn");
+const pVsAiBtn = document.querySelector(".player-vs-ai-btn");
+
+function changeGamePageToPVsAi() { 
+    const playerTitle = 
+        document.querySelectorAll(".player-title");
+
+    playerTitle[0].textContent = "Player";
+    playerTitle[1].textContent = "AI";
+
+    document.querySelector("#player-pick").textContent = "Player picking";
+}
+
+function moveToGamePage() {
+    screenState = "gamePage";
+    let page = document.querySelector(".start-page");
+    page.style.display = "none";
+    page = document.querySelector(".game-page");
+    page.style.display = "flex";
+
+    if (gameModes === "pvai") 
+        changeGamePageToPVsAi();
+    
+
+}
+
+pVsPBtn.addEventListener("click", () => {
+    gameModes = "pvp";
+
+    moveToGamePage();
+});
+
+pVsAiBtn.addEventListener("click", () => {
+    gameModes = "pvai";
+    
+    moveToGamePage();
+});
+
+
+// after moveToGamePage() function, call startGame()
+
+// don't forget to change gamemode to empty string
+// and screenState back to startPage at the end
+
+
 
