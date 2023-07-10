@@ -132,6 +132,8 @@ const score = {
     playerTwo:  0
 };
 
+let roundWinner = "";
+
 const pVsPBtn = document.querySelector(".player-vs-player-btn");
 const pVsAiBtn = document.querySelector(".player-vs-ai-btn");
 
@@ -214,49 +216,93 @@ function initiateGamePage() {
     });
 }
 
-function showPopUpResult() {
-    // some fancy create html and doo doo animations
+function updateScore() {
+    const playerScore = document.querySelectorAll(".player-score");
+    if (roundWinner === "Player 1 wins") {
+        playerScore[0].textContent = score.playerOne;
+    }
+    else if (roundWinner === "Player 2 wins") {
+        playerScore[1].textContent = score.playerTwo;
+    }
+}
+
+async function showPopUpResult() {
+    const playerPick = document.querySelector("#player-pick");
+    playerPick.style.display = "none";
+
+    /*
+    - change img to corresponding icons 
+    - make round result visible 
+    - wait 2 second  
+    - show pop up result 
+    - update score  
+    - wait 2 second  
+    - hide pop up result and round result 
+    - make player-pick visible again 
+    */
+
+    const iconsArr = ["rock.png", "paper.png", "scissor.png"];
+
+    const icons = document.querySelectorAll(".choice-icon");
+    icons[0].src = `./assets/icons/${iconsArr[choices.playerOneChoice]}`;
+    icons[1].src = `./assets/icons/${iconsArr[choices.playerTwoChoice]}`;
     
+    const roundResult = document.querySelector("#round-result");
+    roundResult.style.display = "flex";
+
+    await new Promise(r => setTimeout(r, 1500));
+
+    const popUpResult = document.querySelector("#pop-up-result");
+    popUpResult.firstElementChild.textContent = `${roundWinner}`;
+    popUpResult.style.display = "block";
+    updateScore();
+
+    await new Promise(r => setTimeout(r, 2000));
+
+    roundResult.style.display = "none";
+    popUpResult.style.display = "none";
+
+    playerPick.style.display = "block";
 }
 
 function evaluateRound(player1, player2) {
     if ( (choices.playerOneChoice + 1) % 3 == choices.playerTwoChoice ) {
         score.playerTwo++;
-        // pop up result here, call a function that makes it
-        console.log(`${player2} win`);
+        roundWinner = "Player 2 wins";
     }      
     else if (choices.playerOneChoice == choices.playerTwoChoice) {
-        
-        // pop up result here, call a function that makes it
-        console.log("draw");
+        roundWinner = "Draw"
     }
     else {
         score.playerOne++;
-        // pop up result here, call a function that makes it
-        console.log(`${player1} win`);
+        roundWinner = "Player 1 wins";
     }
-
-    console.log(`p1 = ${choices.playerOneChoice} and p2 = ${choices.playerTwoChoice}`);
-    console.log(`score = ${score.playerOne} - ${score.playerTwo}`);
     
+    showPopUpResult();
 
     choices.playerOneChoice = -1;
     choices.playerTwoChoice = -1; 
-    
-    showPopUpResult();
 }
 
-function showGameResult() {
+async function showGameResult() {
+    await new Promise(r => setTimeout(r, 3800));
+
+    
+    // instead of alert
     alert("game ended");
+    // pop up at the end, who won.
+    // restart and go to start-page btns
 
-    // pop up at the end, who won
-    // btns, restart and go to start-page
+    
+    
 
+    // don't forget to change gamemode to empty string
+    // and screenState back to startPage at the end
 }
 
 function pvpGame(player1, player2) {
     /* 
-    check every 300 milisecond:
+    check every 200 milisecond:
     1. if someone has got a score of 5, game ends
     2. detects if both players have selected their option
     3. detects if player one already choose
@@ -282,7 +328,7 @@ function pvpGame(player1, player2) {
             changeMiddlePartUI("Player 2");
         }
         
-    }, 300);
+    }, 200);
 }
 
 
@@ -329,21 +375,3 @@ pVsAiBtn.addEventListener("click", () => {
     initiateGamePage();
     startGame();
 });
-
-
-
-
-
-
-// after moveToGamePage() function, call startGame()
-
-// don't forget to change gamemode to empty string
-// and screenState back to startPage at the end
-
-
-/*
-- player-pick-container result, add image, p, image, also the js code
-- pop up result and pop up end result outsite 
-  player-pick-container, put in middle (absoulte/floating?), do it all in javascript
-- player vs player, if p1 or p2 didn't pick, invalid round
-*/

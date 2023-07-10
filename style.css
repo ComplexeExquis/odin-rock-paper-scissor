@@ -108,10 +108,45 @@ body {
     margin-top: 0.25rem;
 }
 
-#player-pick-container {
-    font-size: 2.25rem;
+#player-pick{
+    font-size: 2rem;
+    text-align: center;
 }   
 
+#round-result {
+    display: none;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.round-result-text {
+    height: fit-content;
+}
+
+#pop-up-result {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background-color: #7B9971;
+    opacity: 64%;
+    padding: 4rem 6rem;
+}
+
+#pop-up-result-text {
+    font-size: 2.25rem;
+    font-weight: 100;
+    text-align: center;
+}
+  
+
+.choice-icon {
+    max-width: 9rem;
+    max-height: 9rem;
+}
 
 #choices-container {
     display: flex;
@@ -136,6 +171,6 @@ media queries
 - game-page-choices-btn needs to be bigger and more gap
 - game-page layout on tablet and dekstop sucks, fix that, 
   hint: less gap between things.
-
+- pop up result is way to small on tablet and dekstop
 
 */
