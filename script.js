@@ -96,15 +96,7 @@ function game() {
     
 }
 
-/*
 
-- player-pick-container result, add image, p, image, also js
-- pop up result and pop up end result outsite 
-  player-pick-container, put in middle, do it all in javascript
-
-
-
-*/
 
 /*
 All possible states: 
@@ -120,9 +112,29 @@ All possible gamemodes:
 */
 let gameModes = "";
 
+// either player1 or player2 turn
+let turn = "player1";
+// can be rock, paper, or scissor
+let choice = "";
+
+const choices = {
+    /*
+    0 = rock
+    1 = paper
+    2 = scissor
+    */
+    playerOneChoice: -1, // player
+    playerTwoChoice: -1   // can be player2 or AI
+};
+
+const score = {
+    playerOne: 0,
+    playerTwo:  0
+};
 
 const pVsPBtn = document.querySelector(".player-vs-player-btn");
 const pVsAiBtn = document.querySelector(".player-vs-ai-btn");
+
 
 function changeGamePageToPVsAi() { 
     const playerTitle = 
@@ -143,21 +155,184 @@ function moveToGamePage() {
 
     if (gameModes === "pvai") 
         changeGamePageToPVsAi();
+}
+
+function changeMiddlePartUI(player) {
+    document.querySelector("#player-pick").textContent = `${player} is picking`;
+}
+
+function rpsBtnHandler() {
+    if (turn === "player1") {
+        switch(choice) {
+            case "rock":
+                choices.playerOneChoice = 0;
+                break;
+            case "paper":
+                choices.playerOneChoice = 1;
+                break;
+            case "scissor":
+                choices.playerOneChoice = 2;
+                break;
+        }
+        
+        turn = "player2";
+    }
+    else {
+        switch(choice) {
+            case "rock":
+                choices.playerTwoChoice = 0;
+                break;
+            case "paper":
+                choices.playerTwoChoice = 1;
+                break;
+            case "scissor":
+                choices.playerTwoChoice = 2;
+                break;
+        }
+        
+        turn = "player1";
+        
+    }
+}
+
+function initiateGamePage() {
+    const rockBtn = document.querySelector(".btn.rock");
+    const paperBtn = document.querySelector(".btn.paper");
+    const scissorBtn = document.querySelector(".btn.scissor");
+
+    rockBtn.addEventListener("click", () => {
+        choice = "rock"
+        rpsBtnHandler();
+    });
+    paperBtn.addEventListener("click", () => {
+        choice = "paper"
+        rpsBtnHandler();
+    });
+    scissorBtn.addEventListener("click", () => {
+        choice = "scissor"
+        rpsBtnHandler();
+    });
+}
+
+function showPopUpResult() {
+    // some fancy create html and doo doo animations
+    
+}
+
+function evaluateRound(player1, player2) {
+    if ( (choices.playerOneChoice + 1) % 3 == choices.playerTwoChoice ) {
+        score.playerTwo++;
+        // pop up result here, call a function that makes it
+        console.log(`${player2} win`);
+    }      
+    else if (choices.playerOneChoice == choices.playerTwoChoice) {
+        
+        // pop up result here, call a function that makes it
+        console.log("draw");
+    }
+    else {
+        score.playerOne++;
+        // pop up result here, call a function that makes it
+        console.log(`${player1} win`);
+    }
+
+    console.log(`p1 = ${choices.playerOneChoice} and p2 = ${choices.playerTwoChoice}`);
+    console.log(`score = ${score.playerOne} - ${score.playerTwo}`);
     
 
+    choices.playerOneChoice = -1;
+    choices.playerTwoChoice = -1; 
+    
+    showPopUpResult();
+}
+
+function showGameResult() {
+    alert("game ended");
+
+    // pop up at the end, who won
+    // btns, restart and go to start-page
+
+}
+
+function pvpGame(player1, player2) {
+    /* 
+    check every 300 milisecond:
+    1. if someone has got a score of 5, game ends
+    2. detects if both players have selected their option
+    3. detects if player one already choose
+    */
+    changeMiddlePartUI("Player 1");
+    
+    const rounds = setInterval(() => {
+        if (score.playerOne === 5 || 
+            score.playerTwo === 5) {
+            showGameResult();
+            clearInterval(rounds);
+        }
+        else if (choices.playerOneChoice !== -1 && 
+                 choices.playerTwoChoice !== -1) {
+            evaluateRound(player1, player2);
+
+            // round finished, reverting the ui back
+            changeMiddlePartUI("Player 1");
+        }
+        else if (choices.playerOneChoice !== -1) {
+            // player 1 finish choosing their choose, 
+            // change ui to player 2
+            changeMiddlePartUI("Player 2");
+        }
+        
+    }, 300);
+}
+
+
+function startGame() {
+    /* 
+    TODO, implement
+    - start round
+    - player one pick
+    - player two pick
+    - evaluate round result, 
+    - check if one of the player score has reached to 5, then than player won, stop game
+    */ 
+
+    // player vs ai gamemode
+    if (gameModes === "pvai") {
+        /*
+        player turn
+        ai turn
+        showPopUpResult();
+        until one have five score
+        
+        then 
+        showGameResult();
+        */
+    }    
+    else {
+        pvpGame("Player 1", "Player 2");
+    }
+    
 }
 
 pVsPBtn.addEventListener("click", () => {
     gameModes = "pvp";
 
     moveToGamePage();
+    initiateGamePage();
+    startGame();
 });
 
 pVsAiBtn.addEventListener("click", () => {
     gameModes = "pvai";
     
     moveToGamePage();
+    initiateGamePage();
+    startGame();
 });
+
+
+
+
 
 
 // after moveToGamePage() function, call startGame()
@@ -166,4 +341,9 @@ pVsAiBtn.addEventListener("click", () => {
 // and screenState back to startPage at the end
 
 
-
+/*
+- player-pick-container result, add image, p, image, also the js code
+- pop up result and pop up end result outsite 
+  player-pick-container, put in middle (absoulte/floating?), do it all in javascript
+- player vs player, if p1 or p2 didn't pick, invalid round
+*/
