@@ -281,6 +281,7 @@ function enableRpsBtns() {
 }
 
 function pvpGame(player1, player2) {
+    turn = "player1";
     // enable button
     enableRpsBtns();
     /* 
@@ -316,7 +317,7 @@ function pvpGame(player1, player2) {
 function getAiChoice() {
     let computerChoice = Math.random();
 
-    turn = "player1"
+    turn = "player1";
 
     if(computerChoice  <= 0.3) return 0;
     else if (computerChoice >= 0.31 && 
