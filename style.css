@@ -34,10 +34,6 @@ body {
 }
 
 
-/* .container.start-page {
-    display: none;
-} */
-
 #title {
     margin: 0;
     font-size: 2rem;
@@ -141,7 +137,37 @@ body {
     font-weight: 100;
     text-align: center;
 }
+
+#game-result-pop-up{
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #7B9971;
+    padding: 3.5rem 1rem;
+    min-height: 22.25rem;
+}
   
+#game-result-text {
+    font-weight: 100;
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+#game-result-btns-container {
+    display: flex;
+    justify-content: space-between;
+}
+.game-result-btn {
+    color: #F3FCF0;
+    background-color: #7B9971;
+    border: none;
+    font-size: 2rem;
+    font-weight: 100;
+}
+
+.game-result-btn:hover {
+    cursor: pointer;
+}
 
 .choice-icon {
     max-width: 9rem;
@@ -172,5 +198,5 @@ media queries
 - game-page layout on tablet and dekstop sucks, fix that, 
   hint: less gap between things.
 - pop up result is way to small on tablet and dekstop
-
+- game result need more space between choices buttons
 */

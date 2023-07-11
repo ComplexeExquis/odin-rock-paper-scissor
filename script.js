@@ -1,103 +1,3 @@
-function getComputerChoice() {
-    /*
-    - random floating point number between 0 to 1 not including 1
-    - return char
-      0 = rock, less than or equal 0.3
-      1 = paper, more than 0.30 to 0.60 included
-      2 = scissor, more tham 0.60 up to 0.99 included
-    */ 
-
-    let computerChoice = Math.random();
-
-    if(computerChoice  <= 0.3) return 0;
-    else if (computerChoice >= 0.31 && 
-             computerChoice <= 0.6) return 1;
-    else return 2;
-}
-
-function getPlayerChoice(params) {
-    /* 
-    - prompt for input
-    - proccess the first letter, lowercase
-    - turn player choice to int
-      0 = rock
-      1 = paper
-      2 = scissor
-    */
-    
-    let playerChoice = prompt("enter your choice [rock|paper|scissor]");
-    switch (playerChoice[0].toLowerCase()) {
-        // rock
-        case 'r':
-            return 0;
-        // paper
-        case 'p': 
-            return 1;    
-        // scissor
-        default:
-            return 2;
-    }
-}
-
-
-function playRound(computerChoice, playerChoice) {
-    /* 
-    - run the algorithm
-    - return -1 if computer won
-      return 0 if draw
-      return 1 if player won
-    */
-    console.log(`computer choice: ${computerChoice}`);
-    console.log(`player choice:   ${playerChoice}`);
-
-    let result;
-
-    if ( (playerChoice + 1) % 3 == computerChoice ) {
-        result = -1; 
-        console.log("computer won");
-    }      
-    else if (playerChoice == computerChoice) {
-        result = 0;
-        console.log("draw");
-    }
-    else {
-        result = 1;
-        console.log("player won");
-    }
-        
-    return result;
-}
-
-
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-
-
-    alert("welcome to rock paper scissor againts a computer");
-    alert("the first to achieve five scores wins")
-
-    while (playerScore != 5 && computerScore != 5) {
-        console.log(`player score: ${playerScore}  computer score: ${computerScore}`);
-        let result = playRound( getComputerChoice(), getPlayerChoice() );
-
-        switch (result) {
-            case -1:
-                computerScore++;
-                break;
-            case 1:
-                playerScore++;
-                break;
-            default:
-                break;
-        }
-
-    }
-    
-}
-
-
-
 /*
 All possible states: 
 [1] startPage
@@ -123,7 +23,7 @@ const choices = {
     1 = paper
     2 = scissor
     */
-    playerOneChoice: -1, // player
+    playerOneChoice: -1,  // player
     playerTwoChoice: -1   // can be player2 or AI
 };
 
@@ -136,6 +36,8 @@ let roundWinner = "";
 
 const pVsPBtn = document.querySelector(".player-vs-player-btn");
 const pVsAiBtn = document.querySelector(".player-vs-ai-btn");
+const restartBtn = document.querySelector(".game-result-btn.restart");
+const homeBtn = document.querySelector(".game-result-btn.home");
 
 
 function changeGamePageToPVsAi() { 
@@ -148,6 +50,17 @@ function changeGamePageToPVsAi() {
     document.querySelector("#player-pick").textContent = "Player picking";
 }
 
+function changeGamePageToPVP() {
+    
+    const playerTitle = 
+        document.querySelectorAll(".player-title");
+    
+    playerTitle[0].textContent = "Player 1";
+    playerTitle[1].textContent = "Player 2";
+
+    document.querySelector("#player-pick").textContent = "Player 1 picking";
+}
+
 function moveToGamePage() {
     screenState = "gamePage";
     let page = document.querySelector(".start-page");
@@ -157,6 +70,8 @@ function moveToGamePage() {
 
     if (gameModes === "pvai") 
         changeGamePageToPVsAi();
+    else 
+        changeGamePageToPVP();
 }
 
 function changeMiddlePartUI(player) {
@@ -179,7 +94,7 @@ function rpsBtnHandler() {
         
         turn = "player2";
     }
-    else {
+    else if(turn === "player2" && gameModes === "pvp") {
         switch(choice) {
             case "rock":
                 choices.playerTwoChoice = 0;
@@ -191,10 +106,52 @@ function rpsBtnHandler() {
                 choices.playerTwoChoice = 2;
                 break;
         }
-        
         turn = "player1";
-        
     }
+}
+
+function resetScore() {
+    score.playerOne = 0;
+    score.playerTwo = 0;
+
+    const playerScore = document.querySelectorAll(".player-score");
+    playerScore[0].textContent = 0;
+    playerScore[1].textContent = 0;
+    
+
+    choices.playerOneChoice = -1;
+    choices.playerTwoChoice = -1;
+}
+
+function closeGameResult() {
+    // close pop up game result and show the player pick again
+    document.querySelector("#game-result-pop-up").style.display = "none";
+    document.querySelector("#player-pick").style.display = "flex";
+}
+
+function restartBtnHandler() {
+    resetScore();
+    closeGameResult();
+
+    if (gameModes === "pvp") {
+        pvpGame("Player 1", "Player 2");    
+    }
+    else {
+        pvaiGame("Player", "AI");
+    }
+}
+
+function HomeBtnHandler() {
+    screenState = "homePage";
+    gameModes = "";
+    resetScore();
+
+    closeGameResult();
+
+    let page = document.querySelector(".start-page");
+    page.style.display = "flex";
+    page = document.querySelector(".game-page");
+    page.style.display = "none";
 }
 
 function initiateGamePage() {
@@ -218,12 +175,25 @@ function initiateGamePage() {
 
 function updateScore() {
     const playerScore = document.querySelectorAll(".player-score");
-    if (roundWinner === "Player 1 wins") {
-        playerScore[0].textContent = score.playerOne;
+    
+
+    if (gameModes === "pvp") {
+        if (roundWinner === "Player 1 wins") {
+            playerScore[0].textContent = score.playerOne;
+        }
+        else if (roundWinner === "Player 2 wins") {
+            playerScore[1].textContent = score.playerTwo;
+        }    
     }
-    else if (roundWinner === "Player 2 wins") {
-        playerScore[1].textContent = score.playerTwo;
+    else {
+        if (roundWinner === "Player wins") {
+            playerScore[0].textContent = score.playerOne;
+        }
+        else if (roundWinner === "AI wins") {
+            playerScore[1].textContent = score.playerTwo;
+        }
     }
+    
 }
 
 async function showPopUpResult() {
@@ -268,14 +238,14 @@ async function showPopUpResult() {
 function evaluateRound(player1, player2) {
     if ( (choices.playerOneChoice + 1) % 3 == choices.playerTwoChoice ) {
         score.playerTwo++;
-        roundWinner = "Player 2 wins";
+        roundWinner = `${player2} wins`;
     }      
     else if (choices.playerOneChoice == choices.playerTwoChoice) {
         roundWinner = "Draw"
     }
     else {
         score.playerOne++;
-        roundWinner = "Player 1 wins";
+        roundWinner = `${player1} wins`;
     }
     
     showPopUpResult();
@@ -284,23 +254,35 @@ function evaluateRound(player1, player2) {
     choices.playerTwoChoice = -1; 
 }
 
+function disableRpsBtns() {
+    document.querySelectorAll(".btn.rps").forEach((button) => {
+        button.disabled = true;
+    });
+}
+
 async function showGameResult() {
-    await new Promise(r => setTimeout(r, 3800));
+    await new Promise(r => setTimeout(r, 3500));
 
-    
-    // instead of alert
-    alert("game ended");
-    // pop up at the end, who won.
-    // restart and go to start-page btns
+    // disable button
+    disableRpsBtns();
 
+    document.querySelector("#player-pick").style.display = "none";
+    document.querySelector("#game-result-pop-up").style.display = "flex";
+    
+    document.querySelector("#game-result-text").textContent = `${roundWinner}`;
     
     
+}
 
-    // don't forget to change gamemode to empty string
-    // and screenState back to startPage at the end
+function enableRpsBtns() {
+    document.querySelectorAll(".btn.rps").forEach((button) => {
+        button.disabled = false;
+    });
 }
 
 function pvpGame(player1, player2) {
+    // enable button
+    enableRpsBtns();
     /* 
     check every 200 milisecond:
     1. if someone has got a score of 5, game ends
@@ -331,28 +313,50 @@ function pvpGame(player1, player2) {
     }, 200);
 }
 
+function getAiChoice() {
+    let computerChoice = Math.random();
+
+    turn = "player1"
+
+    if(computerChoice  <= 0.3) return 0;
+    else if (computerChoice >= 0.31 && 
+             computerChoice <= 0.6) return 1;
+    else return 2;
+}
+
+function pvaiGame(player1, player2) {
+    turn = "player1";
+    enableRpsBtns();
+
+    changeMiddlePartUI("Player");
+    
+    const rounds = setInterval(() => {
+        if (score.playerOne === 5 || 
+            score.playerTwo === 5) {
+            showGameResult();
+            clearInterval(rounds);
+        }
+        else if (choices.playerOneChoice !== -1) {
+            // player 1 finish choosing their choose, 
+            // change ui to ai picking
+            changeMiddlePartUI("AI");
+
+            choices.playerTwoChoice = getAiChoice();
+            
+            evaluateRound(player1, player2);
+
+            // round finished, reverting the ui back
+            changeMiddlePartUI("Player");
+        }
+        
+    }, 200);
+
+}
 
 function startGame() {
-    /* 
-    TODO, implement
-    - start round
-    - player one pick
-    - player two pick
-    - evaluate round result, 
-    - check if one of the player score has reached to 5, then than player won, stop game
-    */ 
 
-    // player vs ai gamemode
     if (gameModes === "pvai") {
-        /*
-        player turn
-        ai turn
-        showPopUpResult();
-        until one have five score
-        
-        then 
-        showGameResult();
-        */
+        pvaiGame("Player", "AI");
     }    
     else {
         pvpGame("Player 1", "Player 2");
@@ -364,7 +368,6 @@ pVsPBtn.addEventListener("click", () => {
     gameModes = "pvp";
 
     moveToGamePage();
-    initiateGamePage();
     startGame();
 });
 
@@ -372,6 +375,11 @@ pVsAiBtn.addEventListener("click", () => {
     gameModes = "pvai";
     
     moveToGamePage();
-    initiateGamePage();
     startGame();
 });
+
+initiateGamePage();
+
+restartBtn.addEventListener("click", restartBtnHandler);
+
+homeBtn.addEventListener("click", HomeBtnHandler);
